@@ -1,4 +1,6 @@
 import { useState } from 'react';
+import { createAuthUserWithEmailAndPassword, createUserDocumentFromAuth } from '../../utils/firebase/firebase.utils';
+
 
 const defaultFormFields = {
     displayName: '',
@@ -14,6 +16,37 @@ const SignUpForm = () => {
     // destructure and set as current formFields
     const { displayName, email, password, confirmPassword } = formFields;
 
+    const resetFormFields = () => {
+        setFormFields(defaultFormFields);
+    }
+    // handle for submits
+    const handleSubmit = async (event) => {
+        event.preventDefault();
+
+        if (!email || !password || !confirmPassword || !displayName) {
+            console.log("data missing")
+            return;
+        }
+        if (password !== confirmPassword) {
+            console.log('passwords don\'t match');
+            return;
+        } 
+
+        try {
+            const { user } = await createAuthUserWithEmailAndPassword(email, password);
+            user.displayName = displayName;
+            await createUserDocumentFromAuth(user)
+            resetFormFields()
+        } catch(error) {
+            if (error.code === 'auth/email-already-in-use') {
+                alert("Account already exists for this email address.")
+            } else {
+                console.log('error: User Creation encountered an error', error);
+            }
+        }
+
+    }
+
     // create generic change handler
     const handleChange = (event) => {
         const { name, value } = event.target;
@@ -22,9 +55,11 @@ const SignUpForm = () => {
 
     }
 
-    <div>
-        <h1>Sign up with Email and Password</h1>
-            <form onSubmit={() => {}}>
+    return (
+
+        <div>
+            <h1>Sign up with Email and Password</h1>
+            <form onSubmit={handleSubmit}>
                 <label>Display Name</label>
                 <input 
                     type="text" 
@@ -62,7 +97,8 @@ const SignUpForm = () => {
                 />
                 <button type="submit">Sign Up</button>
             </form>
-    </div>
+        </div>
+    )
 }
 
 export default SignUpForm;

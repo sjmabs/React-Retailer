@@ -1,14 +1,12 @@
 import { initializeApp } from "firebase/app";
 import { 
     getAuth, 
-    signInWithRedirect, 
     signInWithPopup, 
-    GoogleAuthProvider 
+    GoogleAuthProvider,
+    createUserWithEmailAndPassword
 } from 'firebase/auth'
 import {
     getFirestore, doc, getDoc, setDoc } from 'firebase/firestore'
-
-import SignUpForm from "../../components/sign-up-form/sign-up-form.component";
 
 // Your web app's Firebase configuration
 const firebaseConfig = {
@@ -37,6 +35,7 @@ export const db = getFirestore();
 
 
 export const createUserDocumentFromAuth = async (userAuth) => {
+    if (!userAuth) return;
     const userDocRef = doc(db, 'users', userAuth.uid);
     console.log(userDocRef);
     
@@ -65,3 +64,10 @@ export const createUserDocumentFromAuth = async (userAuth) => {
 
     return userDocRef;
 };
+
+
+export const createAuthUserWithEmailAndPassword = async (email, password) => {
+    if(!email || !password) return;
+
+    return createUserWithEmailAndPassword(auth, email, password);
+}
