@@ -8,6 +8,8 @@ import {
 import {
     getFirestore, doc, getDoc, setDoc } from 'firebase/firestore'
 
+import SignUpForm from "../../components/sign-up-form/sign-up-form.component";
+
 // Your web app's Firebase configuration
 const firebaseConfig = {
     apiKey: "AIzaSyALxxpODBhaOmrlC7YpRMKIDUVnoIK7PRk",
