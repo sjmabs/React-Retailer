@@ -5,7 +5,8 @@ import {
     GoogleAuthProvider,
     createUserWithEmailAndPassword,
     signInWithEmailAndPassword,
-    signOut
+    signOut,
+    onAuthStateChanged
 } from 'firebase/auth'
 import {
     getFirestore, doc, getDoc, setDoc } from 'firebase/firestore'
@@ -81,3 +82,9 @@ export const createAuthUserWithEmailAndPassword = async (email, password) => {
 }
 
 export const signOutUser = async () => await signOut(auth);
+
+
+// on auth state changed looks for any auth changes such as sign in and out and runs a callback function every time this happens
+// it is an open listener so it is always listening - need to tell it to stop listening everytime it unmounts otherwise we get a memory leak.
+export const onAuthStateChangedListener = (callback) => 
+    onAuthStateChanged(auth, callback);

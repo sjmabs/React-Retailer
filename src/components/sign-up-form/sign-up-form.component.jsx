@@ -4,7 +4,6 @@ import { createAuthUserWithEmailAndPassword, createUserDocumentFromAuth } from '
 import FormInput from '../form-input/form-input.component';
 import Button from '../button/button.component';
 
-import { UserContext } from '../../context/user.context';
 
 import './sign-up-form.styles.scss';
 
@@ -19,9 +18,6 @@ const defaultFormFields = {
 const SignUpForm = () => {
     // add useState to component and pass it the empty values of object above
     const [formFields, setFormFields] = useState(defaultFormFields);
-
-    const { setCurrentUser } = useContext(UserContext);
-
 
     // destructure and set as current formFields
     const { displayName, email, password, confirmPassword } = formFields;
@@ -46,7 +42,6 @@ const SignUpForm = () => {
             const { user } = await createAuthUserWithEmailAndPassword(email, password);
             user.displayName = displayName;
             await createUserDocumentFromAuth(user);
-            setCurrentUser(user);
             resetFormFields();
         } catch(error) {
             if (error.code === 'auth/email-already-in-use') {

@@ -1,12 +1,10 @@
-import { useState, useContext } from 'react';
+import { useState } from 'react';
 import { signUserInWithEmailAndPassword, signInWithGooglePopup, createUserDocumentFromAuth} from '../../utils/firebase/firebase.utils';
 
 import './sign-in-form.styles.scss';
 
 import FormInput from '../form-input/form-input.component';
 import Button from '../button/button.component';
-
-import { UserContext } from '../../context/user.context';
 
 
 const defaultFormFields = {
@@ -16,25 +14,24 @@ const defaultFormFields = {
 }
 
 const SignInForm = () => {
-    // sign in with google
-    const signInWithGoogle = async () => {
-        try {
-            const {user} = await signInWithGooglePopup();
-            await createUserDocumentFromAuth(user);
-        } catch (error) {
-            console.log(error);
-        }
-    }
+
     // add useState to component and pass it the empty values of object above
     const [formFields, setFormFields] = useState(defaultFormFields);
 
     // destructure and set as current formFields
     const { email, password } = formFields;
 
-    const { setCurrentUser } = useContext(UserContext);
-
     const resetFormFields = () => {
         setFormFields(defaultFormFields);
+    }
+
+    // sign in with google
+    const signInWithGoogle = async () => {
+        try {
+            await signInWithGooglePopup();
+        } catch (error) {
+            console.log(error);
+        }
     }
 
     // handle form subimission - check if user is in db
@@ -52,7 +49,6 @@ const SignInForm = () => {
 
         try {
             const { user } = await signUserInWithEmailAndPassword(email, password);
-            setCurrentUser(user);
             resetFormFields();
         } catch(error) {
             switch(error.code) {
