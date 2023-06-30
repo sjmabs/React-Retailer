@@ -13,7 +13,7 @@ export const ProductsContext = createContext({
 // the component that we wrap around other components that should have access to this context
 export const ProductsProvider = ({ children }) => {
     const [ products, setProducts ] = useState(PRODUCTS);
-    const value = { products, setProducts };
+    const value = { products };
  
     return <ProductsContext.Provider value={value}>{children}</ProductsContext.Provider>
 }
