@@ -12,6 +12,3 @@ const CartDropdown = () => {
 };
 
 export default CartDropdown;
-
-// to do 
-// create a way to be able to store the state of the cartdropdown is up or down and trigger an onclick to hide/show.
