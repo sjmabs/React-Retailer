@@ -13,9 +13,8 @@ const CartDropdown = () => {
     const { cartItems, isCartOpen, setIsCartOpen } = useContext(CartContext);
 
     let navigate = useNavigate(); 
-    const routeChange = () => { 
-        let path = `/checkout`; 
-        navigate(path);
+    const navigateToCheckout = () => { 
+        navigate(`/checkout`);
         setIsCartOpen(!isCartOpen);
       }
     return (
@@ -25,7 +24,7 @@ const CartDropdown = () => {
                     <CartItem key={cartItem.id} cartItem={cartItem} />
                 )}
             </div>
-            <Button buttonType='' onClick={routeChange} >Checkout</Button>
+            <Button buttonType='' onClick={navigateToCheckout} >Checkout</Button>
         </div>
     )
 };

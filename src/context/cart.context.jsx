@@ -39,9 +39,7 @@ const clearCartItem = (cartItems, productToClear) => {
         (cartItem) => cartItem.id === productToClear.id);
     
     if (existingCartItem) {
-        cartItems = cartItems.filter((cartItem) => {
-            return cartItem.id !== productToClear.id;   
-        })
+        cartItems = cartItems.filter((cartItem) => cartItem.id !== productToClear.id);
     }
     return [ ...cartItems ];
 }
@@ -54,6 +52,8 @@ export const CartContext = createContext({
     cartItems: [],
     setCartItems: () => {},
     addItemToCart: () => {},
+    removeItemFromCart: () => {},
+    clearItemFromCart: () => {},
     cartItemCount: 0,
 });
 
