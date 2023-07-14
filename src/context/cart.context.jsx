@@ -14,7 +14,37 @@ const addCartItem = (cartItems, productToAdd) => {
     return [ ...cartItems, { ...productToAdd, quantity: 1}];
 }
 
+// function to see if product is already in cartItems and decrease quantity else return cartItems
+const removeCartItem = (cartItems, productToRemove) => {
+    const existingCartItem = cartItems.find(
+        (cartItem) => cartItem.id === productToRemove.id);
+    
+    if (existingCartItem) {
+        if (productToRemove.quantity > 1) {
+            return cartItems.map((cartItem) => cartItem.id === productToRemove.id ? 
+            { ...cartItem, quantity: cartItem.quantity - 1 }
+            : cartItem
+        );
+        }
+        else {
+            return clearCartItem(cartItems, productToRemove);
+        }
+    }
+    return [ ...cartItems ];
+}
 
+// function to clear cart item
+const clearCartItem = (cartItems, productToClear) => {
+    const existingCartItem = cartItems.find(
+        (cartItem) => cartItem.id === productToClear.id);
+    
+    if (existingCartItem) {
+        cartItems = cartItems.filter((cartItem) => {
+            return cartItem.id !== productToClear.id;   
+        })
+    }
+    return [ ...cartItems ];
+}
 
 
 // the actual value I want to access/store - pass the default value
@@ -37,12 +67,21 @@ export const CartProvider = ({ children }) => {
         setCartItems(addCartItem(cartItems, productToAdd));
     }
 
+    const removeItemFromCart = (productToRemove) => {
+        setCartItems(removeCartItem(cartItems, productToRemove));
+    }
+
+    const clearItemFromCart = (productToClear) => {
+        setCartItems(clearCartItem(cartItems, productToClear));
+    }
+
+
     useEffect(() => {
-        const cartCount = cartItems.reduce((total, cartItem) => total + cartItem.quantity, 0)
+        const cartCount = cartItems.reduce((count, cartItem) => count + cartItem.quantity, 0)
         setCartItemCount(cartCount);
     }, [cartItems]);
 
-    const value = { isCartOpen, setIsCartOpen, addItemToCart, cartItems, cartItemCount };
+    const value = { isCartOpen, setIsCartOpen, addItemToCart, removeItemFromCart, clearItemFromCart, cartItems, cartItemCount };
 
 
     return <CartContext.Provider value={value}>{children}</CartContext.Provider>

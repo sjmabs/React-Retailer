@@ -26,4 +26,3 @@ const ProductCard = ( { product }) => {
 
 export default ProductCard;
 
-// need to add onClick to button in here to addItemToCart
