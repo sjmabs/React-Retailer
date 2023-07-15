@@ -6,12 +6,9 @@ import CheckoutItem from '../checkout-item/checkout-item.component';
 
 
 const Checkout = () => {
-    const {cartItems} = useContext(CartContext)
+    const {cartItems, cartTotal} = useContext(CartContext)
     const headers = ["PRODUCT", "DESCRIPTION", "QUANTITY", "PRICE", "REMOVE" ]
-    var cartCount = 0;
-    if (cartItems.length !== 0) {
-        cartCount = cartItems.reduce((total, cartItem) => total + (cartItem.quantity * cartItem.price), 0)
-    }    
+
     return (
             <div className='checkout-container'>
                 <div className='checkout-header'>
@@ -25,7 +22,7 @@ const Checkout = () => {
             {cartItems.map(cartItem => 
                 <CheckoutItem key={cartItem.id} product={cartItem} />
             )}
-            <span className='total'>TOTAL: £{cartCount}</span>
+            <span className='total'>TOTAL: £{cartTotal}</span>
             </div>      
     )
 };

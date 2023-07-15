@@ -18,19 +18,16 @@ const addCartItem = (cartItems, productToAdd) => {
 const removeCartItem = (cartItems, productToRemove) => {
     const existingCartItem = cartItems.find(
         (cartItem) => cartItem.id === productToRemove.id);
-    
-    if (existingCartItem) {
-        if (productToRemove.quantity > 1) {
-            return cartItems.map((cartItem) => cartItem.id === productToRemove.id ? 
-            { ...cartItem, quantity: cartItem.quantity - 1 }
-            : cartItem
-        );
-        }
-        else {
-            return clearCartItem(cartItems, productToRemove);
-        }
+
+    if (existingCartItem.quantity > 1) {
+        return cartItems.map((cartItem) => cartItem.id === productToRemove.id ? 
+        { ...cartItem, quantity: cartItem.quantity - 1 }
+        : cartItem
+    );
     }
-    return [ ...cartItems ];
+    else {
+        return clearCartItem(cartItems, productToRemove);
+    }
 }
 
 // function to clear cart item
@@ -55,6 +52,7 @@ export const CartContext = createContext({
     removeItemFromCart: () => {},
     clearItemFromCart: () => {},
     cartItemCount: 0,
+    cartTotal: 0
 });
 
 // the component that we wrap around other components that should have access to this context
@@ -62,6 +60,7 @@ export const CartProvider = ({ children }) => {
     const [ isCartOpen, setIsCartOpen ] = useState(false);
     const [cartItems, setCartItems] = useState([]);
     const [cartItemCount, setCartItemCount] = useState(0);
+    const [cartTotal, setcartTotal] = useState(0);
 
     const addItemToCart = (productToAdd) => {
         setCartItems(addCartItem(cartItems, productToAdd));
@@ -75,13 +74,19 @@ export const CartProvider = ({ children }) => {
         setCartItems(clearCartItem(cartItems, productToClear));
     }
 
-
+    // useEffect to count cart items 
     useEffect(() => {
         const cartCount = cartItems.reduce((count, cartItem) => count + cartItem.quantity, 0)
         setCartItemCount(cartCount);
     }, [cartItems]);
 
-    const value = { isCartOpen, setIsCartOpen, addItemToCart, removeItemFromCart, clearItemFromCart, cartItems, cartItemCount };
+    // useEffect to calculate cart toal 
+    useEffect(() => {
+        const newCartTotal = cartItems.reduce((total, cartItem) => total + (cartItem.quantity * cartItem.price), 0)
+        setcartTotal(newCartTotal);
+    }, [cartItems]);
+
+    const value = { isCartOpen, setIsCartOpen, addItemToCart, removeItemFromCart, clearItemFromCart, cartItems, cartItemCount, cartTotal };
 
 
     return <CartContext.Provider value={value}>{children}</CartContext.Provider>
